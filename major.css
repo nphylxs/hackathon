@@ -26,18 +26,21 @@
   }
   
   .logo {
-    font-size: 20px;
+    font-size: 30px;
     font-weight: bold;
     color: #3b82f6;
     margin-bottom: 0; 
-    padding: 20px 10px 10px 10px;
+    padding: 20px 10px 20px 10px;
 }
-  
+  .logo a{
+    color:#3b82f6;
+    text-decoration: none;
+  }
   .menu {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    font-size: 14px;
+    font-size: 20px;
     padding-left: 10px;
   }
   
@@ -60,7 +63,7 @@
   
   .bottom-link a {
     color: #374151;
-    font-size: 14px;
+    font-size: 20px;
     text-decoration: none;
   }
   
