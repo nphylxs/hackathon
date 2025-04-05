@@ -9,9 +9,9 @@ import time
 def time_conv(user):
     result = f'{user[0:2]}%3A{user[3:5]}'
 #asking for preferred time and date
-date = input('Enter the date: ')
-start = input('Start time: ')
-end = input('End time: ')
+date = input('Enter the date: ') #must be in YYYY-MM-DD format
+start = input('Start time: ') #must be in 24 hour format
+end = input('End time: ') #must be in 24 hour format
 people = int(input('How many people?(1-6) '))
 capacity = 1 if people <= 2 else 2
 
@@ -31,7 +31,7 @@ try:
 except NoSuchElementException:
     print("Rooms might be available!")
 
-    
+
 #find buttons
 availability = driver.find_elements(By.CLASS_NAME, "s-lc-suggestion-book-now")
 #loooping through each button
