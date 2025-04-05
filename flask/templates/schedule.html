@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class & ECA Schedule Planner</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .schedule-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .schedule-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .schedule-display {
+            margin-top: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .day-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .day-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f2f2f2;
+            margin-right: 5px;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .day-tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Class & ECA Schedule Planner</h1>
+        
+        <div class="schedule-form">
+            <div>
+                <h2>Class Schedule</h2>
+                <div class="form-group">
+                    <label for="class-name">Class Name</label>
+                    <input type="text" id="class-name" placeholder="e.g. Mathematics, Biology">
+                </div>
+                
+                <div class="form-group">
+                    <label for="class-day">Day</label>
+                    <select id="class-day">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="class-start">Start Time</label>
+                    <input type="time" id="class-start">
+                </div>
+                
+                <div class="form-group">
+                    <label for="class-end">End Time</label>
+                    <input type="time" id="class-end">
+                </div>
+                
+                <div class="form-group">
+                    <label for="class-room">Room/Location</label>
+                    <input type="text" id="class-room" placeholder="e.g. Room 205, Science Lab">
+                </div>
+                
+                <button id="add-class">Add Class</button>
+            </div>
+            
+            <div>
+                <h2>ECA Schedule</h2>
+                <div class="form-group">
+                    <label for="eca-name">Activity Name</label>
+                    <input type="text" id="eca-name" placeholder="e.g. Basketball, Chess Club">
+                </div>
+                
+                <div class="form-group">
+                    <label for="eca-day">Day</label>
+                    <select id="eca-day">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eca-start">Start Time</label>
+                    <input type="time" id="eca-start">
+                </div>
+                
+                <div class="form-group">
+                    <label for="eca-end">End Time</label>
+                    <input type="time" id="eca-end">
+                </div>
+                
+                <div class="form-group">
+                    <label for="eca-location">Location</label>
+                    <input type="text" id="eca-location" placeholder="e.g. Gym, Art Room">
+                </div>
+                
+                <button id="add-eca">Add ECA</button>
+            </div>
+        </div>
+        
+        <div class="schedule-display">
+            <h2>Your Schedule</h2>
+            <div class="day-tabs">
+                <div class="day-tab active" data-day="all">All Days</div>
+                <div class="day-tab" data-day="Monday">Monday</div>
+                <div class="day-tab" data-day="Tuesday">Tuesday</div>
+                <div class="day-tab" data-day="Wednesday">Wednesday</div>
+                <div class="day-tab" data-day="Thursday">Thursday</div>
+                <div class="day-tab" data-day="Friday">Friday</div>
+                <div class="day-tab" data-day="Saturday">Saturday</div>
+                <div class="day-tab" data-day="Sunday">Sunday</div>
+            </div>
+            
+            <table id="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Day</th>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-body">
+                    <!-- Schedule items will be added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved data from localStorage
+            loadSavedData();
+            
+            // Class Schedule Form
+            document.getElementById('add-class').addEventListener('click', function() {
+                addScheduleItem('class');
+            });
+            
+            // ECA Schedule Form
+            document.getElementById('add-eca').addEventListener('click', function() {
+                addScheduleItem('eca');
+            });
+            
+            // Day tabs functionality
+            const dayTabs = document.querySelectorAll('.day-tab');
+            dayTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    dayTabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    const day = this.getAttribute('data-day');
+                    filterScheduleByDay(day);
+                });
+            });
+            
+            // Function to add a new schedule item (class or ECA)
+            function addScheduleItem(type) {
+                const prefix = type === 'class' ? 'class-' : 'eca-';
+                const name = document.getElementById(prefix + 'name').value;
+                const day = document.getElementById(prefix + 'day').value;
+                const start = document.getElementById(prefix + 'start').value;
+                const end = document.getElementById(prefix + 'end').value;
+                const location = document.getElementById(type === 'class' ? prefix + 'room' : prefix + 'location').value;
+                
+                if (!name || !start || !end) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                const scheduleItem = {
+                    id: Date.now(),
+                    type: type === 'class' ? 'Class' : 'ECA',
+                    name,
+                    day,
+                    start,
+                    end,
+                    location
+                };
+                
+                // Save to localStorage
+                saveScheduleItem(scheduleItem);
+                
+                // Add to the display
+                addItemToTable(scheduleItem);
+                
+                // Clear the form
+                if (type === 'class') {
+                    document.getElementById('class-name').value = '';
+                    document.getElementById('class-start').value = '';
+                    document.getElementById('class-end').value = '';
+                    document.getElementById('class-room').value = '';
+                } else {
+                    document.getElementById('eca-name').value = '';
+                    document.getElementById('eca-start').value = '';
+                    document.getElementById('eca-end').value = '';
+                    document.getElementById('eca-location').value = '';
+                }
+            }
+            
+            // Function to save schedule item to localStorage
+            function saveScheduleItem(item) {
+                let scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
+                scheduleItems.push(item);
+                localStorage.setItem('scheduleItems', JSON.stringify(scheduleItems));
+            }
+            
+            // Function to add item to the table
+            function addItemToTable(item) {
+                const tbody = document.getElementById('schedule-body');
+                const row = document.createElement('tr');
+                row.setAttribute('data-day', item.day);
+                row.setAttribute('data-id', item.id);
+                
+                const timeStr = `${formatTime(item.start)} - ${formatTime(item.end)}`;
+                
+                row.innerHTML = `
+                    <td>${item.type}</td>
+                    <td>${item.name}</td>
+                    <td>${item.day}</td>
+                    <td>${timeStr}</td>
+                    <td>${item.location || '-'}</td>
+                    <td><button class="delete-btn" data-id="${item.id}">Delete</button></td>
+                `;
+                
+                tbody.appendChild(row);
+                
+                // Add event listener to the delete button
+                row.querySelector('.delete-btn').addEventListener('click', function() {
+                    deleteScheduleItem(item.id);
+                });
+            }
+            
+            // Function to delete a schedule item
+            function deleteScheduleItem(id) {
+                if (confirm('Are you sure you want to delete this item?')) {
+                    // Remove from localStorage
+                    let scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
+                    scheduleItems = scheduleItems.filter(item => item.id !== id);
+                    localStorage.setItem('scheduleItems', JSON.stringify(scheduleItems));
+                    
+                    // Remove from the table
+                    document.querySelector(`tr[data-id="${id}"]`).remove();
+                }
+            }
+            
+            // Function to load saved data
+            function loadSavedData() {
+                // Load schedule items
+                const scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
+                scheduleItems.forEach(item => addItemToTable(item));
+            }
+            
+            // Function to filter schedule by day
+            function filterScheduleByDay(day) {
+                const rows = document.querySelectorAll('#schedule-body tr');
+                
+                rows.forEach(row => {
+                    if (day === 'all' || row.getAttribute('data-day') === day) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Helper function to format time (remove seconds)
+            function formatTime(timeStr) {
+                if (!timeStr) return '';
+                return timeStr.substring(0, 5);
+            }
+            
+            // Event delegation for delete buttons (for dynamically added elements)
+            document.getElementById('schedule-body').addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-btn')) {
+                    const id = parseInt(e.target.getAttribute('data-id'));
+                    deleteScheduleItem(id);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
