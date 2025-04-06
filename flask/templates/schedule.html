@@ -1,377 +1,353 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class & ECA Schedule Planner</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="../static/css/major.css">
-</head>
-<body>
-    <div class="container_index">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo"><a href="{{ url_for('index') }}">Study_Room</a></div>
-            <nav class="menu">
-                <h3 class="active">Options</h3>
-                <a class="active" href="{{ url_for('schedule') }}">My Schedule</a>
-                <a href="#">Current Availability</a>
-                <a href="#">Extra Remainders</a>
-            </nav>
-            <div class="bottom-link">
-                <a href="#">My profile</a>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main">
-            <div class="container">
-                <h1><i class="fas fa-calendar-alt"></i> Class & ECA Schedule Planner</h1>
-                
-                <div class="schedule-form">
-                    <div>
-                        <h2><i class="fas fa-book"></i> Class Schedule</h2>
-                        <div class="form-group">
-                            <label for="class-name"><i class="fas fa-pen"></i> Class Name</label>
-                            <input type="text" id="class-name" placeholder="e.g. Mathematics, Biology">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="class-day"><i class="fas fa-calendar-day"></i> Day</label>
-                            <select id="class-day">
-                                <option value="Monday">Monday</option>
-                                <option value="Tuesday">Tuesday</option>
-                                <option value="Wednesday">Wednesday</option>
-                                <option value="Thursday">Thursday</option>
-                                <option value="Friday">Friday</option>
-                                <option value="Saturday">Saturday</option>
-                                <option value="Sunday">Sunday</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="class-start"><i class="fas fa-clock"></i> Start Time</label>
-                            <input type="time" id="class-start">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="class-end"><i class="fas fa-clock"></i> End Time</label>
-                            <input type="time" id="class-end">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="class-room"><i class="fas fa-map-marker-alt"></i> Room/Location</label>
-                            <input type="text" id="class-room" placeholder="e.g. Room 205, Science Lab">
-                        </div>
-                        
-                        <button id="add-class"><i class="fas fa-plus"></i> Add Class</button>
-                    </div>
-                    
-                    <div>
-                        <h2><i class="fas fa-running"></i> ECA Schedule</h2>
-                        <div class="form-group">
-                            <label for="eca-name"><i class="fas fa-pen"></i> Activity Name</label>
-                            <input type="text" id="eca-name" placeholder="e.g. Basketball, Chess Club">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="eca-day"><i class="fas fa-calendar-day"></i> Day</label>
-                            <select id="eca-day">
-                                <option value="Monday">Monday</option>
-                                <option value="Tuesday">Tuesday</option>
-                                <option value="Wednesday">Wednesday</option>
-                                <option value="Thursday">Thursday</option>
-                                <option value="Friday">Friday</option>
-                                <option value="Saturday">Saturday</option>
-                                <option value="Sunday">Sunday</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="eca-start"><i class="fas fa-clock"></i> Start Time</label>
-                            <input type="time" id="eca-start">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="eca-end"><i class="fas fa-clock"></i> End Time</label>
-                            <input type="time" id="eca-end">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="eca-location"><i class="fas fa-map-marker-alt"></i> Location</label>
-                            <input type="text" id="eca-location" placeholder="e.g. Gym, Art Room">
-                        </div>
-                        
-                        <button id="add-eca"><i class="fas fa-plus"></i> Add ECA</button>
-                    </div>
+{% extends "layout.html" %}
+{% block body %}
+<!-- Main Content -->
+<main class="main">
+    <div class="container">
+        <h1><i class="fas fa-calendar-alt"></i> Class & ECA Schedule Planner</h1>
+        
+        <div class="schedule-form">
+            <div>
+                <h2><i class="fas fa-book"></i> Class Schedule</h2>
+                <div class="form-group">
+                    <label for="class-name"><i class="fas fa-pen"></i> Class Name</label>
+                    <input type="text" id="class-name" placeholder="e.g. Mathematics, Biology">
                 </div>
                 
-                <div class="schedule-display">
-                    <h2><i class="fas fa-list"></i> Your Schedule</h2>
-                    <div class="day-tabs">
-                        <div class="day-tab active" data-day="all">All Days</div>
-                        <div class="day-tab" data-day="Monday">Monday</div>
-                        <div class="day-tab" data-day="Tuesday">Tuesday</div>
-                        <div class="day-tab" data-day="Wednesday">Wednesday</div>
-                        <div class="day-tab" data-day="Thursday">Thursday</div>
-                        <div class="day-tab" data-day="Friday">Friday</div>
-                        <div class="day-tab" data-day="Saturday">Saturday</div>
-                        <div class="day-tab" data-day="Sunday">Sunday</div>
-                    </div>
-                    
-                    <table id="schedule-table">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-tag"></i> Type</th>
-                                <th><i class="fas fa-bookmark"></i> Name</th>
-                                <th><i class="fas fa-calendar-day"></i> Day</th>
-                                <th><i class="fas fa-clock"></i> Time</th>
-                                <th><i class="fas fa-map-marker-alt"></i> Location</th>
-                                <th><i class="fas fa-cog"></i> Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="schedule-body">
-                            <!-- Schedule items will be added here -->
-                        </tbody>
-                    </table>
+                <div class="form-group">
+                    <label for="class-day"><i class="fas fa-calendar-day"></i> Day</label>
+                    <select id="class-day">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
                 </div>
+                
+                <div class="form-group">
+                    <label for="class-start"><i class="fas fa-clock"></i> Start Time</label>
+                    <input type="time" id="class-start">
+                </div>
+                
+                <div class="form-group">
+                    <label for="class-end"><i class="fas fa-clock"></i> End Time</label>
+                    <input type="time" id="class-end">
+                </div>
+                
+                <div class="form-group">
+                    <label for="class-room"><i class="fas fa-map-marker-alt"></i> Room/Location</label>
+                    <input type="text" id="class-room" placeholder="e.g. Room 205, Science Lab">
+                </div>
+                
+                <button id="add-class"><i class="fas fa-plus"></i> Add Class</button>
             </div>
-        </main>
+            
+            <div>
+                <h2><i class="fas fa-running"></i> ECA Schedule</h2>
+                <div class="form-group">
+                    <label for="eca-name"><i class="fas fa-pen"></i> Activity Name</label>
+                    <input type="text" id="eca-name" placeholder="e.g. Basketball, Chess Club">
+                </div>
+                
+                <div class="form-group">
+                    <label for="eca-day"><i class="fas fa-calendar-day"></i> Day</label>
+                    <select id="eca-day">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eca-start"><i class="fas fa-clock"></i> Start Time</label>
+                    <input type="time" id="eca-start">
+                </div>
+                
+                <div class="form-group">
+                    <label for="eca-end"><i class="fas fa-clock"></i> End Time</label>
+                    <input type="time" id="eca-end">
+                </div>
+                
+                <div class="form-group">
+                    <label for="eca-location"><i class="fas fa-map-marker-alt"></i> Location</label>
+                    <input type="text" id="eca-location" placeholder="e.g. Gym, Art Room">
+                </div>
+                
+                <button id="add-eca"><i class="fas fa-plus"></i> Add ECA</button>
+            </div>
+        </div>
+        
+        <div class="schedule-display">
+            <h2><i class="fas fa-list"></i> Your Schedule</h2>
+            <div class="day-tabs">
+                <div class="day-tab active" data-day="all">All Days</div>
+                <div class="day-tab" data-day="Monday">Monday</div>
+                <div class="day-tab" data-day="Tuesday">Tuesday</div>
+                <div class="day-tab" data-day="Wednesday">Wednesday</div>
+                <div class="day-tab" data-day="Thursday">Thursday</div>
+                <div class="day-tab" data-day="Friday">Friday</div>
+                <div class="day-tab" data-day="Saturday">Saturday</div>
+                <div class="day-tab" data-day="Sunday">Sunday</div>
+            </div>
+            
+            <table id="schedule-table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-tag"></i> Type</th>
+                        <th><i class="fas fa-bookmark"></i> Name</th>
+                        <th><i class="fas fa-calendar-day"></i> Day</th>
+                        <th><i class="fas fa-clock"></i> Time</th>
+                        <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                        <th><i class="fas fa-cog"></i> Action</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-body">
+                    <!-- Schedule items will be added here -->
+                </tbody>
+            </table>
+        </div>
     </div>
+</main>
+</div>
 
 
 
 
 <!-- Add these buttons anywhere in your HTML -->
 <div class="file-actions">
-    <button id="export-data"><i class="fas fa-file-export"></i> Save to File</button>
-    <button id="import-data"><i class="fas fa-file-import"></i> Load from File</button>
-  </div>
+<button id="export-data"><i class="fas fa-file-export"></i> Save to File</button>
+<button id="import-data"><i class="fas fa-file-import"></i> Load from File</button>
+</div>
 
 
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load saved data from localStorage
-            loadSavedData();
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load saved data from localStorage
+    loadSavedData();
+    
+    // Class Schedule Form
+    document.getElementById('add-class').addEventListener('click', function() {
+        addScheduleItem('class');
+    });
+    
+    // ECA Schedule Form
+    document.getElementById('add-eca').addEventListener('click', function() {
+        addScheduleItem('eca');
+    });
+    
+    // Day tabs functionality
+    const dayTabs = document.querySelectorAll('.day-tab');
+    dayTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            dayTabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            this.classList.add('active');
             
-            // Class Schedule Form
-            document.getElementById('add-class').addEventListener('click', function() {
-                addScheduleItem('class');
-            });
-            
-            // ECA Schedule Form
-            document.getElementById('add-eca').addEventListener('click', function() {
-                addScheduleItem('eca');
-            });
-            
-            // Day tabs functionality
-            const dayTabs = document.querySelectorAll('.day-tab');
-            dayTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs
-                    dayTabs.forEach(t => t.classList.remove('active'));
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-                    
-                    const day = this.getAttribute('data-day');
-                    filterScheduleByDay(day);
-                });
-            });
-            
-            // Function to add a new schedule item (class or ECA)
-            function addScheduleItem(type) {
-                const prefix = type === 'class' ? 'class-' : 'eca-';
-                const name = document.getElementById(prefix + 'name').value;
-                const day = document.getElementById(prefix + 'day').value;
-                const start = document.getElementById(prefix + 'start').value;
-                const end = document.getElementById(prefix + 'end').value;
-                const location = document.getElementById(type === 'class' ? prefix + 'room' : prefix + 'location').value;
-                
-                if (!name || !start || !end) {
-                    alert('Please fill in all required fields');
-                    return;
-                }
-                
-                const scheduleItem = {
-                    id: Date.now(),
-                    type: type === 'class' ? 'Class' : 'ECA',
-                    name,
-                    day,
-                    start,
-                    end,
-                    location
-                };
-                
-                // Save to localStorage
-                saveScheduleItem(scheduleItem);
-                
-                // Add to the display
-                addItemToTable(scheduleItem);
-                
-                // Clear the form
-                if (type === 'class') {
-                    document.getElementById('class-name').value = '';
-                    document.getElementById('class-start').value = '';
-                    document.getElementById('class-end').value = '';
-                    document.getElementById('class-room').value = '';
-                } else {
-                    document.getElementById('eca-name').value = '';
-                    document.getElementById('eca-start').value = '';
-                    document.getElementById('eca-end').value = '';
-                    document.getElementById('eca-location').value = '';
-                }
-            }
-            
-            // Function to save schedule item to localStorage
-            function saveScheduleItem(item) {
-                let scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
-                scheduleItems.push(item);
-                localStorage.setItem('scheduleItems', JSON.stringify(scheduleItems));
-            }
-            
-            // Function to add item to the table
-            function addItemToTable(item) {
-                const tbody = document.getElementById('schedule-body');
-                const row = document.createElement('tr');
-                row.setAttribute('data-day', item.day);
-                row.setAttribute('data-id', item.id);
-                
-                const timeStr = `${formatTime(item.start)} - ${formatTime(item.end)}`;
-                
-                row.innerHTML = `
-                    <td>${item.type}</td>
-                    <td>${item.name}</td>
-                    <td>${item.day}</td>
-                    <td>${timeStr}</td>
-                    <td>${item.location || '-'}</td>
-                    <td><button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash"></i> Delete</button></td>
-                `;
-                
-                tbody.appendChild(row);
-                
-                // Add event listener to the delete button
-                row.querySelector('.delete-btn').addEventListener('click', function() {
-                    deleteScheduleItem(item.id);
-                });
-            }
-            
-            // Function to delete a schedule item
-            function deleteScheduleItem(id) {
-                if (confirm('Are you sure you want to delete this item?')) {
-                    // Remove from localStorage
-                    let scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
-                    scheduleItems = scheduleItems.filter(item => item.id !== id);
-                    localStorage.setItem('scheduleItems', JSON.stringify(scheduleItems));
-                    
-                    // Remove from the table
-                    document.querySelector(`tr[data-id="${id}"]`).remove();
-                }
-            }
-            
-            // Function to load saved data
-            function loadSavedData() {
-                // Load schedule items
-                const scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
-                scheduleItems.forEach(item => addItemToTable(item));
-            }
-            
-            // Function to filter schedule by day
-            function filterScheduleByDay(day) {
-                const rows = document.querySelectorAll('#schedule-body tr');
-                
-                rows.forEach(row => {
-                    if (day === 'all' || row.getAttribute('data-day') === day) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            }
-            
-            // Helper function to format time (remove seconds)
-            function formatTime(timeStr) {
-                if (!timeStr) return '';
-                return timeStr.substring(0, 5);
-            }
-            
-            // Event delegation for delete buttons (for dynamically added elements)
-            document.getElementById('schedule-body').addEventListener('click', function(e) {
-                if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
-                    const btn = e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn');
-                    const id = parseInt(btn.getAttribute('data-id'));
-                    deleteScheduleItem(id);
-                }
-            });
+            const day = this.getAttribute('data-day');
+            filterScheduleByDay(day);
         });
+    });
+    
+    // Function to add a new schedule item (class or ECA)
+    function addScheduleItem(type) {
+        const prefix = type === 'class' ? 'class-' : 'eca-';
+        const name = document.getElementById(prefix + 'name').value;
+        const day = document.getElementById(prefix + 'day').value;
+        const start = document.getElementById(prefix + 'start').value;
+        const end = document.getElementById(prefix + 'end').value;
+        const location = document.getElementById(type === 'class' ? prefix + 'room' : prefix + 'location').value;
+        
+        if (!name || !start || !end) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        const scheduleItem = {
+            id: Date.now(),
+            type: type === 'class' ? 'Class' : 'ECA',
+            name,
+            day,
+            start,
+            end,
+            location
+        };
+        
+        // Save to localStorage
+        saveScheduleItem(scheduleItem);
+        
+        // Add to the display
+        addItemToTable(scheduleItem);
+        
+        // Clear the form
+        if (type === 'class') {
+            document.getElementById('class-name').value = '';
+            document.getElementById('class-start').value = '';
+            document.getElementById('class-end').value = '';
+            document.getElementById('class-room').value = '';
+        } else {
+            document.getElementById('eca-name').value = '';
+            document.getElementById('eca-start').value = '';
+            document.getElementById('eca-end').value = '';
+            document.getElementById('eca-location').value = '';
+        }
+    }
+    
+    // Function to save schedule item to localStorage
+    function saveScheduleItem(item) {
+        let scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
+        scheduleItems.push(item);
+        localStorage.setItem('scheduleItems', JSON.stringify(scheduleItems));
+    }
+    
+    // Function to add item to the table
+    function addItemToTable(item) {
+        const tbody = document.getElementById('schedule-body');
+        const row = document.createElement('tr');
+        row.setAttribute('data-day', item.day);
+        row.setAttribute('data-id', item.id);
+        
+        const timeStr = `${formatTime(item.start)} - ${formatTime(item.end)}`;
+        
+        row.innerHTML = `
+            <td>${item.type}</td>
+            <td>${item.name}</td>
+            <td>${item.day}</td>
+            <td>${timeStr}</td>
+            <td>${item.location || '-'}</td>
+            <td><button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash"></i> Delete</button></td>
+        `;
+        
+        tbody.appendChild(row);
+        
+        // Add event listener to the delete button
+        row.querySelector('.delete-btn').addEventListener('click', function() {
+            deleteScheduleItem(item.id);
+        });
+    }
+    
+    // Function to delete a schedule item
+    function deleteScheduleItem(id) {
+        if (confirm('Are you sure you want to delete this item?')) {
+            // Remove from localStorage
+            let scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
+            scheduleItems = scheduleItems.filter(item => item.id !== id);
+            localStorage.setItem('scheduleItems', JSON.stringify(scheduleItems));
+            
+            // Remove from the table
+            document.querySelector(`tr[data-id="${id}"]`).remove();
+        }
+    }
+    
+    // Function to load saved data
+    function loadSavedData() {
+        // Load schedule items
+        const scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
+        scheduleItems.forEach(item => addItemToTable(item));
+    }
+    
+    // Function to filter schedule by day
+    function filterScheduleByDay(day) {
+        const rows = document.querySelectorAll('#schedule-body tr');
+        
+        rows.forEach(row => {
+            if (day === 'all' || row.getAttribute('data-day') === day) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+    
+    // Helper function to format time (remove seconds)
+    function formatTime(timeStr) {
+        if (!timeStr) return '';
+        return timeStr.substring(0, 5);
+    }
+    
+    // Event delegation for delete buttons (for dynamically added elements)
+    document.getElementById('schedule-body').addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
+            const btn = e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn');
+            const id = parseInt(btn.getAttribute('data-id'));
+            deleteScheduleItem(id);
+        }
+    });
+});
 
 
-        // EXPORT: Save data to a JSON file
+// EXPORT: Save data to a JSON file
 document.getElementById('export-data').addEventListener('click', () => {
-  const scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
-  
-  if (scheduleItems.length === 0) {
-    alert('No schedule data to save!');
-    return;
-  }
+const scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
 
-  // Create JSON file content
-  const data = {
-    version: 1,
-    lastUpdated: new Date().toISOString(),
-    schedule: scheduleItems
-  };
+if (scheduleItems.length === 0) {
+alert('No schedule data to save!');
+return;
+}
 
-  // Create download link
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `schedule_backup_${new Date().toISOString().split('T')[0]}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+// Create JSON file content
+const data = {
+version: 1,
+lastUpdated: new Date().toISOString(),
+schedule: scheduleItems
+};
+
+// Create download link
+const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = `schedule_backup_${new Date().toISOString().split('T')[0]}.json`;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
 });
 
 // IMPORT: Load data from JSON file
 document.getElementById('import-data').addEventListener('click', () => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.json';
-  
-  input.onchange = e => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    
-    reader.onload = event => {
-      try {
-        const data = JSON.parse(event.target.result);
-        
-        // Validate the imported file
-        if (!data.schedule || !Array.isArray(data.schedule)) {
-          throw new Error('Invalid schedule file format');
-        }
-        
-        // Save to localStorage and refresh UI
-        localStorage.setItem('scheduleItems', JSON.stringify(data.schedule));
-        alert(`Successfully imported ${data.schedule.length} schedule items!`);
-        
-        // Refresh the display
-        document.getElementById('schedule-body').innerHTML = '';
-        loadSavedData();
-      } catch (error) {
-        alert('Error importing file: ' + error.message);
-      }
-    };
-    
-    reader.readAsText(file);
-  };
-  
-  input.click();
+const input = document.createElement('input');
+input.type = 'file';
+input.accept = '.json';
+
+input.onchange = e => {
+const file = e.target.files[0];
+const reader = new FileReader();
+
+reader.onload = event => {
+try {
+const data = JSON.parse(event.target.result);
+
+// Validate the imported file
+if (!data.schedule || !Array.isArray(data.schedule)) {
+  throw new Error('Invalid schedule file format');
+}
+
+// Save to localStorage and refresh UI
+localStorage.setItem('scheduleItems', JSON.stringify(data.schedule));
+alert(`Successfully imported ${data.schedule.length} schedule items!`);
+
+// Refresh the display
+document.getElementById('schedule-body').innerHTML = '';
+loadSavedData();
+} catch (error) {
+alert('Error importing file: ' + error.message);
+}
+};
+
+reader.readAsText(file);
+};
+
+input.click();
 });
 
-    </script>
-</body>
-</html>
+</script>
+{% endblock %}
