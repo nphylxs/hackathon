@@ -6,28 +6,15 @@
     <title>Class & ECA Schedule Planner</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="../static/css/major.css">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: sans-serif;
-        }
-        
-        body {
-            background-color: #f9fafb;
-        }
-
-    </style>
 </head>
 <body>
     <div class="container_index">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="logo"><a href="index.html">Study_Room</a></div>
+            <div class="logo"><a href="{{ url_for('index') }}">Study_Room</a></div>
             <nav class="menu">
                 <h3 class="active">Options</h3>
-                <a class="active" href="schedule.html">My Schedule</a>
+                <a class="active" href="{{ url_for('schedule') }}">My Schedule</a>
                 <a href="#">Current Availability</a>
                 <a href="#">Extra Remainders</a>
             </nav>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <title>{{ title or "Study_Room" }}</title>
+  <link rel="stylesheet" href="../static/css/major.css">
+</head>
+<body>
+  <div class="container_index">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo"><a href="{{ url_for('index') }}">Study_Room</a></div>
+        <nav class="menu">
+            <h3 class="active">Options</h3>
+            <a class="active" href="{{ url_for('schedule') }}">My Schedule</a>
+            <a href="#">Current Availability</a>
+            <a href="#">Extra Remainders</a>
+        </nav>
+        <div class="bottom-link">
+            <a href="#">My profile</a>
+        </div>
+    </aside>
+
+    {% block body %}{% endblock %}
+</body>
+</html>
