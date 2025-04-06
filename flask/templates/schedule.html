@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class & ECA Schedule Planner</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="major.css">
+    <link rel="stylesheet" href="../static/css/major.css">
     <style>
         * {
             box-sizing: border-box;
@@ -151,6 +151,18 @@
             </div>
         </main>
     </div>
+
+
+
+
+<!-- Add these buttons anywhere in your HTML -->
+<div class="file-actions">
+    <button id="export-data"><i class="fas fa-file-export"></i> Save to File</button>
+    <button id="import-data"><i class="fas fa-file-import"></i> Load from File</button>
+  </div>
+
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -306,6 +318,73 @@
                 }
             });
         });
+
+
+        // EXPORT: Save data to a JSON file
+document.getElementById('export-data').addEventListener('click', () => {
+  const scheduleItems = JSON.parse(localStorage.getItem('scheduleItems')) || [];
+  
+  if (scheduleItems.length === 0) {
+    alert('No schedule data to save!');
+    return;
+  }
+
+  // Create JSON file content
+  const data = {
+    version: 1,
+    lastUpdated: new Date().toISOString(),
+    schedule: scheduleItems
+  };
+
+  // Create download link
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `schedule_backup_${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+// IMPORT: Load data from JSON file
+document.getElementById('import-data').addEventListener('click', () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  
+  input.onchange = e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = event => {
+      try {
+        const data = JSON.parse(event.target.result);
+        
+        // Validate the imported file
+        if (!data.schedule || !Array.isArray(data.schedule)) {
+          throw new Error('Invalid schedule file format');
+        }
+        
+        // Save to localStorage and refresh UI
+        localStorage.setItem('scheduleItems', JSON.stringify(data.schedule));
+        alert(`Successfully imported ${data.schedule.length} schedule items!`);
+        
+        // Refresh the display
+        document.getElementById('schedule-body').innerHTML = '';
+        loadSavedData();
+      } catch (error) {
+        alert('Error importing file: ' + error.message);
+      }
+    };
+    
+    reader.readAsText(file);
+  };
+  
+  input.click();
+});
+
     </script>
 </body>
 </html>
