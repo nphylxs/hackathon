@@ -4,27 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class & ECA Schedule Planner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="major.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
         }
         
-        h1, h2 {
-            color: #2c3e50;
+        body {
+            background-color: #f9fafb;
+        }
+
+        
+        /* Main content */
+        .main {
+            flex: 1;
+            padding: 30px;
         }
         
         .container {
             background-color: white;
-            padding: 25px;
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
+        }
+        
+        h1, h2 {
+            color: #1f2937;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
         }
         
         .schedule-form {
@@ -37,6 +58,16 @@
             .schedule-form {
                 grid-template-columns: 1fr;
             }
+            
+            .container_index {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
         }
         
         .form-group {
@@ -47,29 +78,37 @@
             display: block;
             margin-bottom: 5px;
             font-weight: 600;
+            color: #374151;
         }
         
-        input, select, textarea {
+        input, select {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
             font-size: 16px;
+            background-color: white;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         
         button {
-            background-color: #3498db;
+            background-color: #3b82f6;
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
         }
         
         button:hover {
-            background-color: #2980b9;
+            background-color: #2563eb;
         }
         
         .schedule-display {
@@ -80,152 +119,188 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            border: 1px solid #e5e7eb;
         }
         
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #e5e7eb;
             padding: 12px;
             text-align: left;
         }
         
         th {
-            background-color: #f2f2f2;
-        }
-        
-        .hidden {
-            display: none;
+            background-color: #f3f4f6;
+            color: #374151;
+            font-weight: 600;
         }
         
         .day-tabs {
             display: flex;
             margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e5e7eb;
+            overflow-x: auto;
         }
         
         .day-tab {
             padding: 10px 20px;
             cursor: pointer;
-            background-color: #f2f2f2;
+            background-color: #f3f4f6;
             margin-right: 5px;
-            border-radius: 4px 4px 0 0;
+            border-radius: 5px 5px 0 0;
+            white-space: nowrap;
+            color: #374151;
         }
         
         .day-tab.active {
-            background-color: #3498db;
+            background-color: #3b82f6;
             color: white;
+        }
+        
+        .delete-btn {
+            background-color: #ef4444;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .delete-btn:hover {
+            background-color: #dc2626;
+        }
+        
+        .fa {
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Class & ECA Schedule Planner</h1>
-        <div class="schedule-form">
-            <div>
-                <h2>Class Schedule</h2>
-                <div class="form-group">
-                    <label for="class-name">Class Name</label>
-                    <input type="text" id="class-name" placeholder="e.g. Mathematics, Biology" name="name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="class-day">Day</label>
-                    <select id="class-day">
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                        <option value="Sunday">Sunday</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="class-start">Start Time</label>
-                    <input type="time" id="class-start">
-                </div>
-                
-                <div class="form-group">
-                    <label for="class-end">End Time</label>
-                    <input type="time" id="class-end">
-                </div>
-                
-                <div class="form-group">
-                    <label for="class-room">Room/Location</label>
-                    <input type="text" id="class-room" placeholder="e.g. Room 205, Science Lab">
-                </div>
-                
-                <button id="add-class">Add Class</button>
+    <div class="container_index">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo"><a href="index.html">Study_Room</a></div>
+            <nav class="menu">
+                <h3 class="active">Options</h3>
+                <a class="active" href="schedule.html">My Schedule</a>
+                <a href="#">Current Availability</a>
+                <a href="#">Extra Remainders</a>
+            </nav>
+            <div class="bottom-link">
+                <a href="#">My profile</a>
             </div>
-            
-            <div>
-                <h2>ECA Schedule</h2>
-                <div class="form-group" action="/add" method="get">
-                    <label for="eca-name">Activity Name</label>
-                    <input type="text" id="eca-name" placeholder="e.g. Basketball, Chess Club">
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <h1><i class="fas fa-calendar-alt"></i> Class & ECA Schedule Planner</h1>
+                
+                <div class="schedule-form">
+                    <div>
+                        <h2><i class="fas fa-book"></i> Class Schedule</h2>
+                        <div class="form-group">
+                            <label for="class-name"><i class="fas fa-pen"></i> Class Name</label>
+                            <input type="text" id="class-name" placeholder="e.g. Mathematics, Biology">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="class-day"><i class="fas fa-calendar-day"></i> Day</label>
+                            <select id="class-day">
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="class-start"><i class="fas fa-clock"></i> Start Time</label>
+                            <input type="time" id="class-start">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="class-end"><i class="fas fa-clock"></i> End Time</label>
+                            <input type="time" id="class-end">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="class-room"><i class="fas fa-map-marker-alt"></i> Room/Location</label>
+                            <input type="text" id="class-room" placeholder="e.g. Room 205, Science Lab">
+                        </div>
+                        
+                        <button id="add-class"><i class="fas fa-plus"></i> Add Class</button>
+                    </div>
+                    
+                    <div>
+                        <h2><i class="fas fa-running"></i> ECA Schedule</h2>
+                        <div class="form-group">
+                            <label for="eca-name"><i class="fas fa-pen"></i> Activity Name</label>
+                            <input type="text" id="eca-name" placeholder="e.g. Basketball, Chess Club">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eca-day"><i class="fas fa-calendar-day"></i> Day</label>
+                            <select id="eca-day">
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eca-start"><i class="fas fa-clock"></i> Start Time</label>
+                            <input type="time" id="eca-start">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eca-end"><i class="fas fa-clock"></i> End Time</label>
+                            <input type="time" id="eca-end">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eca-location"><i class="fas fa-map-marker-alt"></i> Location</label>
+                            <input type="text" id="eca-location" placeholder="e.g. Gym, Art Room">
+                        </div>
+                        
+                        <button id="add-eca"><i class="fas fa-plus"></i> Add ECA</button>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="eca-day">Day</label>
-                    <select id="eca-day">
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                        <option value="Sunday">Sunday</option>
-                    </select>
+                <div class="schedule-display">
+                    <h2><i class="fas fa-list"></i> Your Schedule</h2>
+                    <div class="day-tabs">
+                        <div class="day-tab active" data-day="all">All Days</div>
+                        <div class="day-tab" data-day="Monday">Monday</div>
+                        <div class="day-tab" data-day="Tuesday">Tuesday</div>
+                        <div class="day-tab" data-day="Wednesday">Wednesday</div>
+                        <div class="day-tab" data-day="Thursday">Thursday</div>
+                        <div class="day-tab" data-day="Friday">Friday</div>
+                        <div class="day-tab" data-day="Saturday">Saturday</div>
+                        <div class="day-tab" data-day="Sunday">Sunday</div>
+                    </div>
+                    
+                    <table id="schedule-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-tag"></i> Type</th>
+                                <th><i class="fas fa-bookmark"></i> Name</th>
+                                <th><i class="fas fa-calendar-day"></i> Day</th>
+                                <th><i class="fas fa-clock"></i> Time</th>
+                                <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                                <th><i class="fas fa-cog"></i> Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="schedule-body">
+                            <!-- Schedule items will be added here -->
+                        </tbody>
+                    </table>
                 </div>
-                
-                <div class="form-group">
-                    <label for="eca-start">Start Time</label>
-                    <input type="time" id="eca-start">
-                </div>
-                
-                <div class="form-group">
-                    <label for="eca-end">End Time</label>
-                    <input type="time" id="eca-end">
-                </div>
-                
-                <div class="form-group">
-                    <label for="eca-location">Location</label>
-                    <input type="text" id="eca-location" placeholder="e.g. Gym, Art Room">
-                </div>
-                
-                <button id="add-eca">Add ECA</button>
             </div>
-        </div>
-        
-        <div class="schedule-display">
-            <h2>Your Schedule</h2>
-            <div class="day-tabs">
-                <div class="day-tab active" data-day="all">All Days</div>
-                <div class="day-tab" data-day="Monday">Monday</div>
-                <div class="day-tab" data-day="Tuesday">Tuesday</div>
-                <div class="day-tab" data-day="Wednesday">Wednesday</div>
-                <div class="day-tab" data-day="Thursday">Thursday</div>
-                <div class="day-tab" data-day="Friday">Friday</div>
-                <div class="day-tab" data-day="Saturday">Saturday</div>
-                <div class="day-tab" data-day="Sunday">Sunday</div>
-            </div>
-            
-            <table id="schedule-table">
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Name</th>
-                        <th>Day</th>
-                        <th>Time</th>
-                        <th>Location</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="schedule-body">
-                    <!-- Schedule items will be added here -->
-                </tbody>
-            </table>
-        </div>
+        </main>
     </div>
 
     <script>
@@ -323,7 +398,7 @@
                     <td>${item.day}</td>
                     <td>${timeStr}</td>
                     <td>${item.location || '-'}</td>
-                    <td><button class="delete-btn" data-id="${item.id}">Delete</button></td>
+                    <td><button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash"></i> Delete</button></td>
                 `;
                 
                 tbody.appendChild(row);
@@ -375,8 +450,9 @@
             
             // Event delegation for delete buttons (for dynamically added elements)
             document.getElementById('schedule-body').addEventListener('click', function(e) {
-                if (e.target.classList.contains('delete-btn')) {
-                    const id = parseInt(e.target.getAttribute('data-id'));
+                if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
+                    const btn = e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn');
+                    const id = parseInt(btn.getAttribute('data-id'));
                     deleteScheduleItem(id);
                 }
             });
